@@ -1,0 +1,12 @@
+C:\Users\Hay Zohar\documents\visual studio 2015\Projects\CharacterImAliveProject\CharacterImAliveProject\bin\CharacterImAliveProject.dll.config
+C:\Users\Hay Zohar\documents\visual studio 2015\Projects\CharacterImAliveProject\CharacterImAliveProject\bin\CharacterImAliveProject.dll
+C:\Users\Hay Zohar\documents\visual studio 2015\Projects\CharacterImAliveProject\CharacterImAliveProject\bin\CharacterImAliveProject.pdb
+C:\Users\Hay Zohar\documents\visual studio 2015\Projects\CharacterImAliveProject\CharacterImAliveProject\obj\Debug\CharacterImAliveProject.csprojResolveAssemblyReference.cache
+C:\Users\Hay Zohar\documents\visual studio 2015\Projects\CharacterImAliveProject\CharacterImAliveProject\obj\Debug\CharacterImAliveProject.dll
+C:\Users\Hay Zohar\documents\visual studio 2015\Projects\CharacterImAliveProject\CharacterImAliveProject\obj\Debug\CharacterImAliveProject.pdb
+D:\AliveFirstCharacter\CharacterImAliveProject\bin\CharacterImAliveProject.dll.config
+D:\AliveFirstCharacter\CharacterImAliveProject\bin\CharacterImAliveProject.dll
+D:\AliveFirstCharacter\CharacterImAliveProject\bin\CharacterImAliveProject.pdb
+D:\AliveFirstCharacter\CharacterImAliveProject\obj\Debug\CharacterImAliveProject.dll
+D:\AliveFirstCharacter\CharacterImAliveProject\obj\Debug\CharacterImAliveProject.pdb
+D:\AliveFirstCharacter\CharacterImAliveProject\obj\Debug\CharacterImAliveProject.csprojResolveAssemblyReference.cache

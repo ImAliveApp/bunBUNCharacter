@@ -1,0 +1,5 @@
+C:\Users\Hay Zohar\Documents\GitHub\PirateCharacter\PirateCharacter\bin\PirateCharacter.dll.config
+C:\Users\Hay Zohar\Documents\GitHub\PirateCharacter\PirateCharacter\bin\PirateCharacter.dll
+C:\Users\Hay Zohar\Documents\GitHub\PirateCharacter\PirateCharacter\bin\PirateCharacter.pdb
+C:\Users\Hay Zohar\Documents\GitHub\PirateCharacter\PirateCharacter\obj\Debug\PirateCharacter.dll
+C:\Users\Hay Zohar\Documents\GitHub\PirateCharacter\PirateCharacter\obj\Debug\PirateCharacter.pdb

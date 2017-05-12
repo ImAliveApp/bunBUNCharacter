@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{A103DF08-F890-4F93-907B-88874B9BAAF7}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>2.2</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="gulpfile.js" />
+    <Content Include="index.html" />
+    <Content Include="Scripts\collections.js" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="AliveEnvironmentObjects\AliveSmsData.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\Calendar\ICalendarEvent.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\ICurrentTime.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\IRectangle.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\IVoice.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAliveLatLng.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAliveLatLngBounds.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAlivePlace.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAlivePlaceLikelihood.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuClasses\BaseMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuClasses\MenuHeader.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuClasses\ViewType.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\IBaseMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\IButtonMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\ICheckBoxMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\IMenuHeader.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\IPaintMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\IPictureMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\IProgressBarMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\ITextBoxMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\Places\PlaceType.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\ResourceManagerHelper.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\ICalendarManager.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\IMenuBuilder.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\AgentConstants.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\AwarenessClasses\IAliveLocation.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\IAliveResource.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\AwarenessClasses\IAliveUserActivity.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\AwarenessClasses\IAliveWeather.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\ITime.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IActionManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IAliveAgent.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IAwarenessManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\ICharacterManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IConfigurationManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IDatabaseManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IManagersHandler.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IResourceManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IMenuManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IRestManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\ISpeechToTextManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\ITextToSpeechManager.ts" />
+    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="bunBUN\MiniGame\MiniGame.ts" />
+    <TypeScriptCompile Include="bunBUN\bunBUNState\bunBUNState.ts" />
+    <TypeScriptCompile Include="bunBUN\IStateSwitchable.ts" />
+    <TypeScriptCompile Include="bunBUN\TimerTriggerSystem.ts" />
+    <TypeScriptCompile Include="Scripts\collections.d.ts" />
+    <TypeScriptCompile Include="Scripts\collections.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="tsconfig.json" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>CharacterImAliveProject</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>13741</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:13741/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptOutFile>
+    </TypeScriptOutFile>
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

@@ -1,0 +1,12 @@
+C:\Users\Hay Zohar\Desktop\codes\PirateProject\PirateProject\bin\PirateProject.dll.config
+C:\Users\Hay Zohar\Desktop\codes\PirateProject\PirateProject\bin\PirateProject.dll
+C:\Users\Hay Zohar\Desktop\codes\PirateProject\PirateProject\bin\PirateProject.pdb
+C:\Users\Hay Zohar\Desktop\codes\PirateProject\PirateProject\obj\Debug\PirateProject.csprojResolveAssemblyReference.cache
+C:\Users\Hay Zohar\Desktop\codes\PirateProject\PirateProject\obj\Debug\PirateProject.dll
+C:\Users\Hay Zohar\Desktop\codes\PirateProject\PirateProject\obj\Debug\PirateProject.pdb
+C:\Users\Hay Zohar\Documents\GitHub\PirateProject\PirateProject\bin\PirateProject.dll.config
+C:\Users\Hay Zohar\Documents\GitHub\PirateProject\PirateProject\bin\PirateProject.dll
+C:\Users\Hay Zohar\Documents\GitHub\PirateProject\PirateProject\bin\PirateProject.pdb
+C:\Users\Hay Zohar\Documents\GitHub\PirateProject\PirateProject\obj\Debug\PirateProject.csprojResolveAssemblyReference.cache
+C:\Users\Hay Zohar\Documents\GitHub\PirateProject\PirateProject\obj\Debug\PirateProject.dll
+C:\Users\Hay Zohar\Documents\GitHub\PirateProject\PirateProject\obj\Debug\PirateProject.pdb
