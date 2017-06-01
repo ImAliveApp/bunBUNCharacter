@@ -5,7 +5,6 @@ var AliveClass = (function () {
     AliveClass.prototype.onStart = function (handler, disabledPermissions) {
         this.handler = handler;
         this.handler.getActionManager().move(0, this.handler.getConfigurationManager().getScreenHeight(), 0);
-        this.handler.getActionManager().draw("activate.png", this.handler.getConfigurationManager().getMaximalResizeRatio(), false);
         this.initializeStates(handler);
     };
     AliveClass.prototype.onTick = function (time) {
@@ -127,7 +126,7 @@ var AliveClass = (function () {
         feedCount.Height = 1;
         feedCount.Width = 3;
         feedCount.Text = "5 Carrots left";
-        feedCount.Name = "feedCount";
+        feedCount.Name = "foodCount";
         feedCount.TextColor = "#0D89C8";
         feedCount.BackgroundColor = "#000000";
         var playButton = new ButtonMenuItem();

@@ -19,7 +19,6 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
     onStart(handler: IManagersHandler, disabledPermissions: string[]): void {
         this.handler = handler;
         this.handler.getActionManager().move(0, this.handler.getConfigurationManager().getScreenHeight(), 0);
-        this.handler.getActionManager().draw("activate.png", this.handler.getConfigurationManager().getMaximalResizeRatio(), false);
         this.initializeStates(handler);
     }
 
@@ -236,7 +235,7 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         feedCount.Height = 1;
         feedCount.Width = 3;
         feedCount.Text = "5 Carrots left";
-        feedCount.Name = "feedCount";
+        feedCount.Name = "foodCount";
         feedCount.TextColor = "#0D89C8";
         feedCount.BackgroundColor = "#000000";
 

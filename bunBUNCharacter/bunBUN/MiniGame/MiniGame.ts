@@ -44,13 +44,13 @@ class ReflexMiniGame extends MiniGame {
         this.touches = 1;
         this.progress = 50;
         this.dancingTime = 0;
-        this.currentDrawable = "breathing.png";
+        this.currentDrawable = "standing_smiling.png";
 
         this.difficulty = Math.random() * 100;
 
         let difficultyTrimmed = this.difficulty.toString().substring(0, 4);
 
-        this.actionManager.draw("laughing-ha.png", this.configurationManager.getMaximalResizeRatio(), false);
+        this.actionManager.draw("laughing.png", this.configurationManager.getMaximalResizeRatio(), false);
 
         //Displaying an explainer message for 10 seconds.
         this.actionManager.showMessage("This is a reflex game! i will walk around the screen, and you will need to touch me ,but ONLY while i DANCE! :D "
@@ -111,7 +111,7 @@ class ReflexMiniGame extends MiniGame {
 
     private maybeDance(currentTime: number): void {
         if (currentTime > this.dancingTime) {
-            this.currentDrawable = "breathing.png";
+            this.currentDrawable = "standing_smiling.png";
         }
 
         let danceChance = (100 - this.progress) / 100;
@@ -120,7 +120,7 @@ class ReflexMiniGame extends MiniGame {
 
         if (Math.random() < danceChance) {
             this.dancingTime = currentTime + danceChance * 2000;
-            this.currentDrawable = "pirate-dancing.png";
+            this.currentDrawable = "laughing.png";
         }
     }
 
@@ -159,7 +159,7 @@ class ReflexMiniGame extends MiniGame {
         else if (this.progress >= 100)
             this.finishCallback(true);
 
-        this.currentDrawable = "breathing.png";
+        this.currentDrawable = "standing_smiling.png";
     }
 }
 
@@ -210,7 +210,7 @@ class CatchMiniGame extends MiniGame {
 
         let difficultyTrimmed = this.difficulty.toString().substring(0, 4);
 
-        this.actionManager.draw("laughing-ha.png", this.configurationManager.getMaximalResizeRatio(), false);
+        this.actionManager.draw("laughing.png", this.configurationManager.getMaximalResizeRatio(), false);
 
         //Displaying an explainer message for 10 seconds.
         this.actionManager.showMessage("This is a catch game! i will walk around the screen, and you will need to catch me :D "

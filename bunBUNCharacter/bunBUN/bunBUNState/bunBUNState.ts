@@ -52,7 +52,6 @@
 
     onStart(handler: IManagersHandler): void {
         this.categoryOnScreen = "";
-        this.walking = false;
         this.noDrawTimer = 0;
         this.lastInteractionTime = 0;
         this.managersHandler = handler;
@@ -99,7 +98,6 @@
         let currentX = this.characterManager.getCurrentCharacterXPosition();
         let distanceToMove = Math.abs(currentX - screenWidth);
         let category = AgentConstants.ON_FALLING_RIGHT;
-        this.walking = true;
         if (this.shouldEventHappen(0.5) && distanceToMove > screenWidth / 4) {//walk 
             this.actionManager.move(distanceToMove / 3, 0, bunBUNState.WALK_TIME);
         }
@@ -120,11 +118,13 @@
 
         if (this.currentTime < this.noDrawTimer) return;
 
-        let resToDraw = this.resourceManagerHelper.chooseRandomImage(category);
-        if (resToDraw != this.categoryOnScreen)
+        
+        if (category != this.categoryOnScreen)
+        {
+            this.categoryOnScreen = category;
+            let resToDraw = this.resourceManagerHelper.chooseRandomImage(category);
             this.actionManager.draw(resToDraw, this.configurationManager.getMaximalResizeRatio(), false);
-
-        this.categoryOnScreen = category;
+        }
 
         let soundToPlay = this.resourceManagerHelper.chooseRandomSound(category);
         if (!this.configurationManager.isSoundPlaying())
@@ -139,49 +139,73 @@
         if (moodLevel != null) {
             this.moodLevel = Number(moodLevel);
         }
+        else {
+            this.moodLevel = 0;
+        }
 
         let hungerLevel = this.databaseManager.getObject("hungerLevel");
         if (hungerLevel != null) {
             this.hungerLevel = Number(hungerLevel);
+        }
+        else {
+            this.hungerLevel = 0;
         }
 
         let foodCount = this.databaseManager.getObject("foodCount");
         if (foodCount != null) {
             this.foodCount = Number(foodCount);
         }
+        else {
+            this.foodCount = 5;
+        }
 
         let inCrazyForm = this.databaseManager.getObject("inCrazyForm");
         if (inCrazyForm != null) {
             this.inCrazyForm = inCrazyForm == "true" ? true : false;
+            if (this.inCrazyForm)
+                this.switchContext.switchTo(bunBUNState.CRAZY);
+        }
+        else {
+            this.inCrazyForm = false;
         }
 
         let moodLevelPenalty = this.databaseManager.getObject("moodLevelPenalty");
         if (moodLevelPenalty != null) {
             this.moodLevelPenalty = Number(moodLevelPenalty);
         }
+        else {
+            this.moodLevelPenalty = 0;
+        }
+
+        this.updateFoodCount();
+        this.updateHunger();
     }
 
     /**
      * This method handles feed logic.
      */
-    feed(): void {
+    feed(): boolean {
         if (this.playingMiniGame) return;
         if (this.foodCount <= 0) {
-            this.actionManager.showSystemMessage("You don't have enough food, to obtain food you must play and win bunBUN.");
-            return;
+            this.actionManager.showSystemMessage("You don't have enough food, to obtain more food you must play and win bunBUN.");
+            return false;
         }
-        this.foodCount -= 1;
-        this.databaseManager.saveObject("foodCount", this.foodCount.toString());
+
+        this.foodCount = this.foodCount - 1;
+        this.updateFoodCount();
+
         this.hungerLevel -= 20;
 
         this.updateHunger();
+
+        return true;
     }
 
     /**
      * This method saves the food count locally.
      */
     updateFoodCount(): void {
-        if (this.foodCount < 0) this.foodCount = 0;
+        if (this.foodCount == null || this.foodCount < 0) this.foodCount = 0;
 
         this.menuManager.setProperty("foodCount", "text", this.foodCount.toString() + " carrots left");
         this.databaseManager.saveObject("foodCount", this.foodCount.toString());
@@ -199,14 +223,14 @@
 
         if (this.hungerLevel < 20) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#00ff00");
-            this.moodLevel += 2;
+            this.moodLevel -= 2;
         }
         else if (this.hungerLevel < 40) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#3bc293");
         }
         else if (this.hungerLevel < 60) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#ffde56");
-            this.moodLevel += 1;
+            this.moodLevel -= 1;
         }
         else if (this.hungerLevel < 80) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#fbcd75");
@@ -255,28 +279,28 @@ enum PassiveSubstate {
     LookingAround,
     Eating,
     Drinking,
-    Reading,
+    Playing,
     DoingSomethingStupid,
     AskingForInteraction,
     Mad,
     Happy,
+    Crying,
     WalkingAround,
     Fun
 }
 class PassiveState extends bunBUNState {
     static get LOOKING_AROUND_CHANGE(): number { return 0.1; };
     static get CHANCE_SWITCH_TO_FUN(): number { return 0.2; };
-    static get CHANGE_PASSIVE_STATE(): number { return 0.2; };
+    static get CHANGE_PASSIVE_STATE(): number { return 0.16; };
     static get CHANGE_TO_SLEEP(): number { return 0.05; };
     static get CHANGE_TO_NAP(): number { return 0.1; };
     static get NAP_TIME(): number { return 600000; }; //10 minutes
     static get SLEEP_TIME(): number { return 18000000; };//5 hours
     static get EATING_TIME(): number { return 10000; };
-    static get READING_TIME(): number { return 20000; };
+    static get PLAYING_TIME(): number { return 20000; };
     static get HAVING_FUN_TIME(): number { return 20000; };
     static get BEING_HAPPY_TIME(): number { return 10000; };
     static get ASKING_FOR_INTERACTION_TIME(): number { return 15000; };
-    static get DOING_SOMETHING_STUPID_TIME(): number { return 20000; };
 
     //if bunBUN is asking for interaction for more than 10 minutes, he will start to get mad.
     private askingForInteractionStartTime: number;
@@ -291,14 +315,15 @@ class PassiveState extends bunBUNState {
     private miniGame: MiniGame;
     private currentState: PassiveSubstate;
 
+    private stateInitialized: boolean;
+
     constructor(switchContext: IStateSwitchable) {
         super(switchContext);
         this.playingMiniGame = false;
     }
 
     initializeState(): void {
-        this.syncState();
-        this.maybeWokeUp();
+        
     }
 
     maybeWokeUp(): void {
@@ -315,6 +340,7 @@ class PassiveState extends bunBUNState {
         this.hungerLevel = 0;
         this.moodLevel = 0;
         this.currentState = PassiveSubstate.LookingAround;
+        this.stateInitialized = false;
 
         this.playerWinMessages = ["You are very good at this game :) \nwe got another carrot :D", "Hm, i need more training xD \nwe got another carrot :D",
             "how did you win?!? \nwe got another carrot :D", "Yay! nice job! \nwe got another carrot :D",
@@ -328,6 +354,13 @@ class PassiveState extends bunBUNState {
     }
 
     onTick(time: number): void {
+        if (!this.stateInitialized)
+        {
+            this.syncState();
+            this.maybeWokeUp();
+            this.stateInitialized = true;
+        }
+
         this.currentTime = time;
 
         if (this.playingMiniGame) {
@@ -348,8 +381,8 @@ class PassiveState extends bunBUNState {
                 this.drinkingTick(time);
                 break;
 
-            case PassiveSubstate.Reading:
-                this.readingTick(time);
+            case PassiveSubstate.Playing:
+                this.playingTick(time);
                 break;
 
             case PassiveSubstate.DoingSomethingStupid:
@@ -392,23 +425,8 @@ class PassiveState extends bunBUNState {
         if (this.shouldEventHappen(PassiveState.LOOKING_AROUND_CHANGE)) {
             if (this.shouldEventHappen(PassiveState.CHANGE_PASSIVE_STATE)) {
                 this.actionManager.stopSound();
-                this.currentState = PassiveSubstate.DoingSomethingStupid;
-                this.timerTrigger.set("n_doingSomethingStupid", PassiveState.DOING_SOMETHING_STUPID_TIME);
-            }
-            else if (this.shouldEventHappen(PassiveState.CHANGE_PASSIVE_STATE)) {
-                this.actionManager.stopSound();
-                this.currentState = PassiveSubstate.Eating;
-                this.timerTrigger.set("n_eating", PassiveState.EATING_TIME);
-            }
-            else if (this.shouldEventHappen(PassiveState.CHANGE_PASSIVE_STATE)) {
-                this.actionManager.stopSound();
-                this.currentState = PassiveSubstate.Reading;
-                this.timerTrigger.set("n_reading", PassiveState.READING_TIME);
-            }
-            else if (this.shouldEventHappen(PassiveState.CHANGE_PASSIVE_STATE)) {
-                this.actionManager.stopSound();
-                this.currentState = PassiveSubstate.Drinking;
-                this.timerTrigger.set("n_drinking", PassiveState.EATING_TIME);
+                this.currentState = PassiveSubstate.Playing;
+                this.timerTrigger.set("n_playing", PassiveState.PLAYING_TIME);
             }
             else if (this.shouldEventHappen(PassiveState.CHANCE_SWITCH_TO_FUN)) {
                 this.actionManager.stopSound();
@@ -425,13 +443,12 @@ class PassiveState extends bunBUNState {
             }
             else {
                 this.actionManager.stopSound();
-                this.actionManager.draw(this.walkRandomally(), this.configurationManager.getMaximalResizeRatio(), false);
                 this.currentState = PassiveSubstate.WalkingAround;
                 this.timerTrigger.set("n_walkingAround", bunBUNState.WALK_TIME);
             }
         }
         else {
-            this.drawAndPlayRandomResourceByCategory("n_lookingAround");
+            this.drawAndPlayRandomResourceByCategory("n_normal");
         }
     }
 
@@ -450,13 +467,13 @@ class PassiveState extends bunBUNState {
         this.drawAndPlayRandomResourceByCategory("n_drinking");
     }
 
-    readingTick(time: number): void {
-        if (!this.shouldContinueSubstate("n_drinking")) return;
-        this.drawAndPlayRandomResourceByCategory("n_reading");
+    playingTick(time: number): void {
+        if (!this.shouldContinueSubstate("n_playing")) return;
+        this.drawAndPlayRandomResourceByCategory("n_playing");
     }
 
     askingForInteractionTick(time: number): void {
-        if (time - this.askingForInteractionStartTime > 10000) {
+        if (time - this.askingForInteractionStartTime > 60000) {
             this.actionManager.stopSound();
             let messageIndex = Math.floor(Math.random() * 4);
             this.actionManager.showMessage(this.cryingMessages[messageIndex], "#91CA63", "#ffffff", 5000);
@@ -487,14 +504,15 @@ class PassiveState extends bunBUNState {
     }
 
     doingSomethingStupidTick(time: number): void {
-        if (!this.shouldContinueSubstate("n_doingSomethingStupid")) return;
-        this.drawAndPlayRandomResourceByCategory("n_doingSomethingStupid");
+        if (!this.shouldContinueSubstate("n_askingForInteraction")) return;
+        this.drawAndPlayRandomResourceByCategory("n_askingForInteraction");
     }
 
     walkingAroundTick(time: number): void {
-        if (!this.shouldContinueSubstate("n_walkingAround")) {
-            this.walking = false;
-        }
+        if (!this.shouldContinueSubstate("n_walkingAround")) return;
+        let category = "n_" + this.walkRandomally();
+        if (this.categoryOnScreen == category) return;
+        this.drawAndPlayRandomResourceByCategory(category);
     }
 
     shouldContinueSubstate(substateName: string): boolean {
@@ -550,7 +568,17 @@ class PassiveState extends bunBUNState {
         switch (itemName) {
             case "feedButton":
                 this.lastInteractionTime = this.currentTime;
-                this.feed();
+                if (!this.feed()) return;
+                if (this.shouldEventHappen(0.5))
+                {
+                    this.currentState = PassiveSubstate.Eating;
+                    this.timerTrigger.set("n_eating", PassiveState.EATING_TIME);
+                }
+                else {
+                    this.currentState = PassiveSubstate.Drinking;
+                    this.timerTrigger.set("n_drinking", PassiveState.EATING_TIME);
+                }
+                
                 break;
 
             case "playButton":
@@ -647,18 +675,17 @@ class PassiveState extends bunBUNState {
         if (playerWon) {
             this.foodCount += 1;
             this.updateFoodCount();
-            this.actionManager.draw("bunBUN__laughing.png", this.configurationManager.getMaximalResizeRatio(), false);
+            this.currentState = PassiveSubstate.Happy;
             this.actionManager.showMessage(this.playerWinMessages[messageIndex], "#91CA63", "#ffffff", 5000);
         }
         else {
-            this.actionManager.draw("laughing-ha.png", this.configurationManager.getMaximalResizeRatio(), false);
+            this.currentState = PassiveSubstate.Fun;
             this.actionManager.showMessage(this.playerLoseMessages[messageIndex], "#EC2027", "#ffffff", 5000);
         }
 
         this.menuManager.setProperty("playButton", "Text", "Let's play!");
         this.menuManager.setProperty("hungerLabel", "text", "Hunger:");
         this.menuManager.setProperty("hungerProgress", "progress", this.moodLevel.toString());
-        this.currentState = PassiveSubstate.LookingAround;
     }
 }
 
@@ -671,23 +698,30 @@ class SleepingState extends bunBUNState {
     static get NORMAL_TO_SNORE_CHANCE(): number { return 0.0027 }
 
     private currentState: SleepingSubstate;
-
+    private stateInitialized: boolean;
     constructor(switchContext: IStateSwitchable) {
         super(switchContext);
     }
 
     initializeState(): void {
-        this.syncState();
-        this.currentState = SleepingSubstate.Normal;
+        
     }
 
     onStart(handler: IManagersHandler): void {
         super.onStart(handler);
+        this.stateInitialized = false;
         this.currentState = SleepingSubstate.Normal;
     }
 
     onTick(time: number): void {
         this.currentTime = time;
+
+        if (!this.stateInitialized) {
+            this.syncState();
+            this.stateInitialized = true;
+            this.currentState = SleepingSubstate.Normal;
+        }
+
         if (!this.timerTrigger.isOnGoing("n_sleepingTime")) {
             this.switchContext.switchTo(bunBUNState.PASSIVE);
             this.actionManager.stopSound();
@@ -707,7 +741,7 @@ class SleepingState extends bunBUNState {
 
     normalTick(time: number): void {
         if (!this.configurationManager.isSoundPlaying()) {
-            this.drawAndPlayRandomResourceByCategory("n_sleeping-normal");
+            this.drawAndPlayRandomResourceByCategory("n_sleeping_normal");
         }
 
         if (this.shouldEventHappen(0.25)) {
@@ -724,7 +758,7 @@ class SleepingState extends bunBUNState {
             return;
         }
 
-        this.drawAndPlayRandomResourceByCategory("n_sleeping-nap");
+        this.drawAndPlayRandomResourceByCategory("n_sleeping_nap");
     }
 
     onBackgroundTick(time: number): void {
@@ -804,12 +838,14 @@ class SleepingState extends bunBUNState {
 enum CrazySubstate {
     Normal,
     SharpingKnife,
-    PlayingWithEyeBall,
+    PlayingWithHead,
     RunningRandomally,
     Eating,
     KnockingOnScreen,
     HideAndScare,
-    Drinking
+    Drinking,
+    Screaming,
+    Laughing
 }
 class CrazyState extends bunBUNState {
     static get SCARY_SUBSTATE_TIME(): number { return 10000; };
@@ -817,6 +853,7 @@ class CrazyState extends bunBUNState {
 
     private currentState: CrazySubstate;
     private lastMoodChangeTime: number;
+    
     constructor(switchContext: IStateSwitchable) {
         super(switchContext);
     }
@@ -827,6 +864,7 @@ class CrazyState extends bunBUNState {
 
     onTick(time: number): void {
         this.currentTime = time;
+
         this.maybeDecreaseCrazy(time);
 
         switch (this.currentState) {
@@ -846,8 +884,8 @@ class CrazyState extends bunBUNState {
                 this.knockingOnScreenTick(time);
                 break;
 
-            case CrazySubstate.PlayingWithEyeBall:
-                this.playingWithEyeBallTick(time);
+            case CrazySubstate.PlayingWithHead:
+                this.playingWithHeadTick(time);
                 break;
 
             case CrazySubstate.RunningRandomally:
@@ -856,6 +894,14 @@ class CrazyState extends bunBUNState {
 
             case CrazySubstate.SharpingKnife:
                 this.sharpingKnifeTick(time);
+                break;
+
+            case CrazySubstate.Laughing:
+                this.laughingTick(time);
+                break;
+
+            case CrazySubstate.Screaming:
+                this.screamingTick(time);
                 break;
 
             case CrazySubstate.Drinking:
@@ -873,18 +919,18 @@ class CrazyState extends bunBUNState {
             }
             else if (this.shouldEventHappen(CrazyState.SCARY_SUBSTATE_CHANGE)) {
                 this.actionManager.stopSound();
-                this.currentState = CrazySubstate.HideAndScare;
-                this.timerTrigger.set("c_hide_and_scare", CrazyState.SCARY_SUBSTATE_TIME);
+                this.currentState = CrazySubstate.Screaming;
+                this.timerTrigger.set("c_screaming", CrazyState.SCARY_SUBSTATE_TIME);
             }
             else if (this.shouldEventHappen(CrazyState.SCARY_SUBSTATE_CHANGE)) {
                 this.actionManager.stopSound();
                 this.currentState = CrazySubstate.KnockingOnScreen;
-                this.timerTrigger.set("c_knocking_on_screen", CrazyState.SCARY_SUBSTATE_TIME);
+                this.timerTrigger.set("c_knock_on_screen", CrazyState.SCARY_SUBSTATE_TIME);
             }
             else if (this.shouldEventHappen(CrazyState.SCARY_SUBSTATE_CHANGE)) {
                 this.actionManager.stopSound();
-                this.currentState = CrazySubstate.PlayingWithEyeBall;
-                this.timerTrigger.set("c_playing_with_ball", CrazyState.SCARY_SUBSTATE_TIME);
+                this.currentState = CrazySubstate.PlayingWithHead;
+                this.timerTrigger.set("c_playing_with_head", CrazyState.SCARY_SUBSTATE_TIME);
             }
             else if (this.shouldEventHappen(CrazyState.SCARY_SUBSTATE_CHANGE)) {
                 this.actionManager.stopSound();
@@ -895,6 +941,11 @@ class CrazyState extends bunBUNState {
                 this.actionManager.stopSound();
                 this.currentState = CrazySubstate.SharpingKnife;
                 this.timerTrigger.set("c_sharping_knife", CrazyState.SCARY_SUBSTATE_TIME);
+            }
+            else if (this.shouldEventHappen(CrazyState.SCARY_SUBSTATE_CHANGE)) {
+                this.actionManager.stopSound();
+                this.currentState = CrazySubstate.Laughing;
+                this.timerTrigger.set("c_laughing", CrazyState.SCARY_SUBSTATE_TIME);
             }
             else {
                 this.actionManager.stopSound();
@@ -918,8 +969,8 @@ class CrazyState extends bunBUNState {
     }
 
     knockingOnScreenTick(time: number): void {
-        if (!this.shouldContinueSubstate("c_knocking_on_screen")) return;
-        this.drawAndPlayRandomResourceByCategory("c_knocking_on_screen");
+        if (!this.shouldContinueSubstate("c_knock_on_screen")) return;
+        this.drawAndPlayRandomResourceByCategory("c_knock_on_screen");
     }
 
     drinkingTick(time: number): void {
@@ -930,6 +981,8 @@ class CrazyState extends bunBUNState {
     runningRandomallyTick(time: number): void {
         if (!this.shouldContinueSubstate("c_running_randomally")) return;
         let category = "c_" + this.walkRandomally();
+
+        if (this.categoryOnScreen == category) return;
         this.drawAndPlayRandomResourceByCategory(category);
     }
 
@@ -938,9 +991,19 @@ class CrazyState extends bunBUNState {
         this.drawAndPlayRandomResourceByCategory("c_sharping_knife");
     }
 
-    playingWithEyeBallTick(time: number): void {
-        if (!this.shouldContinueSubstate("c_playing_with_ball")) return;
-        this.drawAndPlayRandomResourceByCategory("c_playing_with_ball");
+    playingWithHeadTick(time: number): void {
+        if (!this.shouldContinueSubstate("c_playing_with_head")) return;
+        this.drawAndPlayRandomResourceByCategory("c_playing_with_head");
+    }
+
+    laughingTick(time: number): void {
+        if (!this.shouldContinueSubstate("c_laughing")) return;
+        this.drawAndPlayRandomResourceByCategory("c_laughing");
+    }
+
+    screamingTick(time: number): void {
+        if (!this.shouldContinueSubstate("c_screaming")) return;
+        this.drawAndPlayRandomResourceByCategory("c_screaming");
     }
 
     shouldContinueSubstate(substateName: string): boolean {

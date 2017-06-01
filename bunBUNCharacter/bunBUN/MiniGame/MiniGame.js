@@ -29,10 +29,10 @@ var ReflexMiniGame = (function (_super) {
         this.touches = 1;
         this.progress = 50;
         this.dancingTime = 0;
-        this.currentDrawable = "breathing.png";
+        this.currentDrawable = "standing_smiling.png";
         this.difficulty = Math.random() * 100;
         var difficultyTrimmed = this.difficulty.toString().substring(0, 4);
-        this.actionManager.draw("laughing-ha.png", this.configurationManager.getMaximalResizeRatio(), false);
+        this.actionManager.draw("laughing.png", this.configurationManager.getMaximalResizeRatio(), false);
         this.actionManager.showMessage("This is a reflex game! i will walk around the screen, and you will need to touch me ,but ONLY while i DANCE! :D "
             + "\nOnce the progress bar in the menu will reach 100%, you will win! but if it reaches 0%... i will win! :D"
             + "\nThe phone will vibrate everytime you do it incorrectly"
@@ -75,14 +75,14 @@ var ReflexMiniGame = (function (_super) {
     };
     ReflexMiniGame.prototype.maybeDance = function (currentTime) {
         if (currentTime > this.dancingTime) {
-            this.currentDrawable = "breathing.png";
+            this.currentDrawable = "standing_smiling.png";
         }
         var danceChance = (100 - this.progress) / 100;
         if (danceChance < 0.15)
             danceChance = 0.15;
         if (Math.random() < danceChance) {
             this.dancingTime = currentTime + danceChance * 2000;
-            this.currentDrawable = "pirate-dancing.png";
+            this.currentDrawable = "laughing.png";
         }
     };
     ReflexMiniGame.prototype.drawCurrentState = function () {
@@ -114,7 +114,7 @@ var ReflexMiniGame = (function (_super) {
             this.finishCallback(false);
         else if (this.progress >= 100)
             this.finishCallback(true);
-        this.currentDrawable = "breathing.png";
+        this.currentDrawable = "standing_smiling.png";
     };
     return ReflexMiniGame;
 }(MiniGame));
@@ -136,7 +136,7 @@ var CatchMiniGame = (function (_super) {
         this.progress = 50;
         this.difficulty = Math.random() * 100;
         var difficultyTrimmed = this.difficulty.toString().substring(0, 4);
-        this.actionManager.draw("laughing-ha.png", this.configurationManager.getMaximalResizeRatio(), false);
+        this.actionManager.draw("laughing.png", this.configurationManager.getMaximalResizeRatio(), false);
         this.actionManager.showMessage("This is a catch game! i will walk around the screen, and you will need to catch me :D "
             + "\nOnce the progress bar in the menu will reach 100%, you will win! but if it reaches 0%... i will win! :D"
             + "\nThe phone will vibrate everytime you do it incorrectly"

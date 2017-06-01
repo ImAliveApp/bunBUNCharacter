@@ -1,6 +1,6 @@
 C:\Users\Hay Zohar\Documents\GitHub\bunBUNCharacter\bunBUNCharacter\bin\bunBUNCharacter.dll.config
 C:\Users\Hay Zohar\Documents\GitHub\bunBUNCharacter\bunBUNCharacter\bin\bunBUNCharacter.dll
 C:\Users\Hay Zohar\Documents\GitHub\bunBUNCharacter\bunBUNCharacter\bin\bunBUNCharacter.pdb
-C:\Users\Hay Zohar\Documents\GitHub\bunBUNCharacter\bunBUNCharacter\obj\Debug\bunBUNCharacter.csprojResolveAssemblyReference.cache
 C:\Users\Hay Zohar\Documents\GitHub\bunBUNCharacter\bunBUNCharacter\obj\Debug\bunBUNCharacter.dll
 C:\Users\Hay Zohar\Documents\GitHub\bunBUNCharacter\bunBUNCharacter\obj\Debug\bunBUNCharacter.pdb
+C:\Users\Hay Zohar\Documents\GitHub\bunBUNCharacter\bunBUNCharacter\obj\Debug\bunBUNCharacter.csprojResolveAssemblyReference.cache
