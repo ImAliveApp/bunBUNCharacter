@@ -127,7 +127,7 @@ var bunBUNState = (function () {
             this.moodLevelPenalty = 0;
         }
         this.updateFoodCount();
-        this.updateHunger();
+        this.updateHunger(true);
     };
     bunBUNState.prototype.feed = function () {
         if (this.playingMiniGame)
@@ -139,7 +139,7 @@ var bunBUNState = (function () {
         this.foodCount = this.foodCount - 1;
         this.updateFoodCount();
         this.hungerLevel -= 20;
-        this.updateHunger();
+        this.updateHunger(false);
         return true;
     };
     bunBUNState.prototype.updateFoodCount = function () {
@@ -148,7 +148,7 @@ var bunBUNState = (function () {
         this.menuManager.setProperty("foodCount", "text", this.foodCount.toString() + " carrots left");
         this.databaseManager.saveObject("foodCount", this.foodCount.toString());
     };
-    bunBUNState.prototype.updateHunger = function () {
+    bunBUNState.prototype.updateHunger = function (syncStep) {
         if (this.hungerLevel > 100)
             this.hungerLevel = 100;
         if (this.hungerLevel < 0)
@@ -157,14 +157,16 @@ var bunBUNState = (function () {
         this.databaseManager.saveObject("hungerLevel", this.hungerLevel.toString());
         if (this.hungerLevel < 20) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#00ff00");
-            this.moodLevel -= 2;
+            if (!syncStep)
+                this.moodLevel -= 2;
         }
         else if (this.hungerLevel < 40) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#3bc293");
         }
         else if (this.hungerLevel < 60) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#ffde56");
-            this.moodLevel -= 1;
+            if (!syncStep)
+                this.moodLevel -= 1;
         }
         else if (this.hungerLevel < 80) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#fbcd75");
@@ -181,6 +183,7 @@ var bunBUNState = (function () {
             this.moodLevel = 100;
             this.moodLevelPenalty = 0;
             this.inCrazyForm = true;
+            this.actionManager.showMessage("Turning to crazy", "#000000", "#ffffff", 5000);
             this.databaseManager.saveObject("inCrazyForm", "true");
             this.switchContext.switchTo(bunBUNState.CRAZY);
             this.drawAndPlayRandomResourceByCategory("turning_to_crazy");
@@ -190,6 +193,7 @@ var bunBUNState = (function () {
             this.moodLevel = 0;
             this.moodLevelPenalty = 0;
             this.inCrazyForm = false;
+            this.actionManager.showMessage("Turning to normal", "#000000", "#ffffff", 5000);
             this.databaseManager.saveObject("inCrazyForm", "false");
             this.switchContext.switchTo(bunBUNState.PASSIVE);
             this.drawAndPlayRandomResourceByCategory("turning_to_normal");
@@ -329,6 +333,7 @@ var PassiveState = (function (_super) {
             this.miniGame.onTick(time);
             return;
         }
+        this.maybeAskForInteraction(time);
         switch (this.currentState) {
             case PassiveSubstate.LookingAround:
                 this.lookingAroundTick(time);
@@ -362,14 +367,17 @@ var PassiveState = (function (_super) {
                 break;
         }
     };
-    PassiveState.prototype.lookingAroundTick = function (time) {
-        this.actionManager.stopSound();
-        if (time - this.lastInteractionTime > 600000 && this.lastInteractionTime != 0) {
+    PassiveState.prototype.maybeAskForInteraction = function (time) {
+        if (time - this.lastInteractionTime > 10000 && this.currentState != PassiveSubstate.Mad
+            && this.currentState != PassiveSubstate.AskingForInteraction) {
             this.actionManager.stopSound();
             this.askingForInteractionStartTime = time;
             this.currentState = PassiveSubstate.AskingForInteraction;
             return;
         }
+    };
+    PassiveState.prototype.lookingAroundTick = function (time) {
+        this.actionManager.stopSound();
         if (this.shouldEventHappen(PassiveState.LOOKING_AROUND_CHANGE)) {
             if (this.shouldEventHappen(PassiveState.CHANGE_PASSIVE_STATE)) {
                 this.actionManager.stopSound();
@@ -420,11 +428,12 @@ var PassiveState = (function (_super) {
         this.drawAndPlayRandomResourceByCategory("n_playing");
     };
     PassiveState.prototype.askingForInteractionTick = function (time) {
-        if (time - this.askingForInteractionStartTime > 60000) {
+        if (time - this.askingForInteractionStartTime > 10000) {
             this.actionManager.stopSound();
             var messageIndex = Math.floor(Math.random() * 4);
             this.actionManager.showMessage(this.cryingMessages[messageIndex], "#91CA63", "#ffffff", 5000);
             this.currentState = PassiveSubstate.Mad;
+            this.lastMoodChangeTime = time;
             return;
         }
         this.drawAndPlayRandomResourceByCategory("n_askingForInteraction");
@@ -721,11 +730,12 @@ var CrazySubstate;
     CrazySubstate[CrazySubstate["PlayingWithHead"] = 2] = "PlayingWithHead";
     CrazySubstate[CrazySubstate["RunningRandomally"] = 3] = "RunningRandomally";
     CrazySubstate[CrazySubstate["Eating"] = 4] = "Eating";
-    CrazySubstate[CrazySubstate["KnockingOnScreen"] = 5] = "KnockingOnScreen";
-    CrazySubstate[CrazySubstate["HideAndScare"] = 6] = "HideAndScare";
-    CrazySubstate[CrazySubstate["Drinking"] = 7] = "Drinking";
-    CrazySubstate[CrazySubstate["Screaming"] = 8] = "Screaming";
-    CrazySubstate[CrazySubstate["Laughing"] = 9] = "Laughing";
+    CrazySubstate[CrazySubstate["EatingSelf"] = 5] = "EatingSelf";
+    CrazySubstate[CrazySubstate["KnockingOnScreen"] = 6] = "KnockingOnScreen";
+    CrazySubstate[CrazySubstate["HideAndScare"] = 7] = "HideAndScare";
+    CrazySubstate[CrazySubstate["Drinking"] = 8] = "Drinking";
+    CrazySubstate[CrazySubstate["Screaming"] = 9] = "Screaming";
+    CrazySubstate[CrazySubstate["Laughing"] = 10] = "Laughing";
 })(CrazySubstate || (CrazySubstate = {}));
 var CrazyState = (function (_super) {
     __extends(CrazyState, _super);
@@ -738,8 +748,14 @@ var CrazyState = (function (_super) {
         configurable: true
     });
     ;
+    Object.defineProperty(CrazyState, "SCARY_EATING_TIME", {
+        get: function () { return 20000; },
+        enumerable: true,
+        configurable: true
+    });
+    ;
     Object.defineProperty(CrazyState, "SCARY_SUBSTATE_CHANGE", {
-        get: function () { return 0.14; },
+        get: function () { return 0.11; },
         enumerable: true,
         configurable: true
     });
@@ -756,6 +772,9 @@ var CrazyState = (function (_super) {
                 break;
             case CrazySubstate.Eating:
                 this.eatingTick(time);
+                break;
+            case CrazySubstate.EatingSelf:
+                this.eatingSelfTick(time);
                 break;
             case CrazySubstate.HideAndScare:
                 this.hideAndScareTick(time);
@@ -784,11 +803,16 @@ var CrazyState = (function (_super) {
         }
     };
     CrazyState.prototype.normalTick = function (time) {
-        if (this.shouldEventHappen(0.1)) {
+        if (this.shouldEventHappen(0.3)) {
             if (this.shouldEventHappen(CrazyState.SCARY_SUBSTATE_CHANGE)) {
                 this.actionManager.stopSound();
                 this.currentState = CrazySubstate.Eating;
-                this.timerTrigger.set("c_eating", CrazyState.SCARY_SUBSTATE_TIME);
+                this.timerTrigger.set("c_eating", CrazyState.SCARY_EATING_TIME);
+            }
+            else if (this.shouldEventHappen(CrazyState.SCARY_SUBSTATE_CHANGE)) {
+                this.actionManager.stopSound();
+                this.currentState = CrazySubstate.EatingSelf;
+                this.timerTrigger.set("c_eating_self", CrazyState.SCARY_SUBSTATE_TIME);
             }
             else if (this.shouldEventHappen(CrazyState.SCARY_SUBSTATE_CHANGE)) {
                 this.actionManager.stopSound();
@@ -834,6 +858,11 @@ var CrazyState = (function (_super) {
         if (!this.shouldContinueSubstate("c_eating"))
             return;
         this.drawAndPlayRandomResourceByCategory("c_eating");
+    };
+    CrazyState.prototype.eatingSelfTick = function (time) {
+        if (!this.shouldContinueSubstate("c_eating_self"))
+            return;
+        this.drawAndPlayRandomResourceByCategory("c_eating_self");
     };
     CrazyState.prototype.hideAndScareTick = function (time) {
         if (!this.shouldContinueSubstate("c_hide_and_scare"))
@@ -887,7 +916,7 @@ var CrazyState = (function (_super) {
         return true;
     };
     CrazyState.prototype.maybeDecreaseCrazy = function (time) {
-        if (time - this.lastMoodChangeTime > 1200000) {
+        if (time - this.lastMoodChangeTime > 10000) {
             this.lastMoodChangeTime = time;
             this.moodLevel -= 1;
             this.updateMood();

@@ -195,7 +195,7 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         mood.Progress = 0;
         mood.TextColor = "#ffffff";
         mood.BackgroundColor = "#000000";
-        mood.FrontColor = "#00ff00";
+        mood.FrontColor = "#b30000";
 
         let hungerLabel = new TextBoxMenuItem();
         hungerLabel.BackgroundColor = "#000000";
