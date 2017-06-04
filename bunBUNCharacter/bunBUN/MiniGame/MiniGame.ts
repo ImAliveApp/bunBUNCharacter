@@ -53,7 +53,7 @@ class ReflexMiniGame extends MiniGame {
         this.actionManager.draw("laughing.png", this.configurationManager.getMaximalResizeRatio(), false);
 
         //Displaying an explainer message for 10 seconds.
-        this.actionManager.showMessage("This is a reflex game! i will walk around the screen, and you will need to touch me ,but ONLY while i DANCE! :D "
+        this.actionManager.showMessage("This is a reflex game! i will walk around the screen, and you will need to touch me ,but ONLY while i Giggle! :D "
             + "\nOnce the progress bar in the menu will reach 100%, you will win! but if it reaches 0%... i will win! :D"
             + "\nThe phone will vibrate everytime you do it incorrectly"
             + "\nDifficulty: " + difficultyTrimmed, "#6599FF", "#ffffff", 10000);
@@ -75,7 +75,7 @@ class ReflexMiniGame extends MiniGame {
         if (currentTime > this.gameStartTime) {//game has started.
             this.updateProgress(currentTime);
             this.moveToRandomLocation(currentTime);
-            this.maybeDance(currentTime);
+            this.maybeGiggle(currentTime);
             this.drawCurrentState();
         }
         else {//game hasn't started yet.
@@ -109,18 +109,18 @@ class ReflexMiniGame extends MiniGame {
         this.actionManager.move(randomMove, randomMove, 250);
     }
 
-    private maybeDance(currentTime: number): void {
+    private maybeGiggle(currentTime: number): void {
         if (currentTime > this.dancingTime) {
             this.currentDrawable = "standing_smiling.png";
         }
 
-        let danceChance = (100 - this.progress) / 100;
-        if (danceChance < 0.15)
-            danceChance = 0.15;
+        let giggleChance = (100 - this.progress) / 100;
+        if (giggleChance < 0.15)
+            giggleChance = 0.15;
 
-        if (Math.random() < danceChance) {
-            this.dancingTime = currentTime + danceChance * 2000;
-            this.currentDrawable = "laughing.png";
+        if (Math.random() < giggleChance) {
+            this.dancingTime = currentTime + giggleChance * 2000;
+            this.currentDrawable = "giggle_laugh.png";
         }
     }
 
@@ -138,7 +138,6 @@ class ReflexMiniGame extends MiniGame {
             case "stop":
                 if (now - this.gameStartTime > 0)
                     this.finishCallback(false);
-
                 break;
         }
     }

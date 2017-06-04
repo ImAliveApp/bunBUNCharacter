@@ -55,6 +55,7 @@ var bunBUNState = (function () {
         this.characterManager = handler.getCharacterManager();
         this.configurationManager = handler.getConfigurationManager();
         this.resourceManagerHelper = new ResourceManagerHelper(this.resourceManager);
+        this.lastHungerTime = this.configurationManager.getCurrentTime().currentTimeMillis;
         this.timerTrigger = new TimerTriggerSystem(function () { return _this.configurationManager.getCurrentTime().currentTimeMillis; });
     };
     bunBUNState.prototype.walkRandomally = function () {
@@ -91,10 +92,10 @@ var bunBUNState = (function () {
     bunBUNState.prototype.syncState = function () {
         var moodLevel = this.databaseManager.getObject("moodLevel");
         if (moodLevel != null) {
-            this.moodLevel = Number(moodLevel);
+            this.crazyMoodLevel = Number(moodLevel);
         }
         else {
-            this.moodLevel = 0;
+            this.crazyMoodLevel = 0;
         }
         var hungerLevel = this.databaseManager.getObject("hungerLevel");
         if (hungerLevel != null) {
@@ -121,10 +122,10 @@ var bunBUNState = (function () {
         }
         var moodLevelPenalty = this.databaseManager.getObject("moodLevelPenalty");
         if (moodLevelPenalty != null) {
-            this.moodLevelPenalty = Number(moodLevelPenalty);
+            this.crazyMoodLevelPenalty = Number(moodLevelPenalty);
         }
         else {
-            this.moodLevelPenalty = 0;
+            this.crazyMoodLevelPenalty = 0;
         }
         this.updateFoodCount();
         this.updateHunger(true);
@@ -158,7 +159,7 @@ var bunBUNState = (function () {
         if (this.hungerLevel < 20) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#00ff00");
             if (!syncStep)
-                this.moodLevel -= 2;
+                this.crazyMoodLevel -= 2;
         }
         else if (this.hungerLevel < 40) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#3bc293");
@@ -166,7 +167,7 @@ var bunBUNState = (function () {
         else if (this.hungerLevel < 60) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#ffde56");
             if (!syncStep)
-                this.moodLevel -= 1;
+                this.crazyMoodLevel -= 1;
         }
         else if (this.hungerLevel < 80) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#fbcd75");
@@ -177,11 +178,11 @@ var bunBUNState = (function () {
         this.updateMood();
     };
     bunBUNState.prototype.updateMood = function () {
-        if (this.moodLevel < this.moodLevelPenalty)
-            this.moodLevel = this.moodLevelPenalty;
-        if (this.moodLevel >= 100 && !this.inCrazyForm) {
-            this.moodLevel = 100;
-            this.moodLevelPenalty = 0;
+        if (this.crazyMoodLevel < this.crazyMoodLevelPenalty)
+            this.crazyMoodLevel = this.crazyMoodLevelPenalty;
+        if (this.crazyMoodLevel >= 100 && !this.inCrazyForm) {
+            this.crazyMoodLevel = 100;
+            this.crazyMoodLevelPenalty = 0;
             this.inCrazyForm = true;
             this.actionManager.showMessage("Turning to crazy", "#000000", "#ffffff", 5000);
             this.databaseManager.saveObject("inCrazyForm", "true");
@@ -189,9 +190,9 @@ var bunBUNState = (function () {
             this.drawAndPlayRandomResourceByCategory("turning_to_crazy");
             this.noDrawTimer = this.currentTime + 10000;
         }
-        else if (this.moodLevel <= 0 && this.inCrazyForm) {
-            this.moodLevel = 0;
-            this.moodLevelPenalty = 0;
+        else if (this.crazyMoodLevel <= 0 && this.inCrazyForm) {
+            this.crazyMoodLevel = 0;
+            this.crazyMoodLevelPenalty = 0;
             this.inCrazyForm = false;
             this.actionManager.showMessage("Turning to normal", "#000000", "#ffffff", 5000);
             this.databaseManager.saveObject("inCrazyForm", "false");
@@ -199,9 +200,9 @@ var bunBUNState = (function () {
             this.drawAndPlayRandomResourceByCategory("turning_to_normal");
             this.noDrawTimer = this.currentTime + 10000;
         }
-        this.databaseManager.saveObject("moodLevel", this.moodLevel.toString());
-        this.databaseManager.saveObject("moodLevelPenalty", this.moodLevelPenalty.toString());
-        this.menuManager.setProperty("moodProgress", "progress", this.moodLevel.toString());
+        this.databaseManager.saveObject("moodLevel", this.crazyMoodLevel.toString());
+        this.databaseManager.saveObject("moodLevelPenalty", this.crazyMoodLevelPenalty.toString());
+        this.menuManager.setProperty("moodProgress", "progress", this.crazyMoodLevel.toString());
     };
     return bunBUNState;
 }());
@@ -298,6 +299,12 @@ var PassiveState = (function (_super) {
         configurable: true
     });
     ;
+    Object.defineProperty(PassiveState, "HUNGER_TIME", {
+        get: function () { return 30000; },
+        enumerable: true,
+        configurable: true
+    });
+    ;
     PassiveState.prototype.initializeState = function () {
     };
     PassiveState.prototype.maybeWokeUp = function () {
@@ -311,7 +318,7 @@ var PassiveState = (function (_super) {
         _super.prototype.onStart.call(this, handler);
         this.lastPlayGameClick = 0;
         this.hungerLevel = 0;
-        this.moodLevel = 0;
+        this.crazyMoodLevel = 0;
         this.currentState = PassiveSubstate.LookingAround;
         this.stateInitialized = false;
         this.playerWinMessages = ["You are very good at this game :) \nwe got another carrot :D", "Hm, i need more training xD \nwe got another carrot :D",
@@ -404,7 +411,15 @@ var PassiveState = (function (_super) {
             }
         }
         else {
+            this.maybeGetHunger();
             this.drawAndPlayRandomResourceByCategory("n_normal");
+        }
+    };
+    PassiveState.prototype.maybeGetHunger = function () {
+        if (this.currentTime - this.lastHungerTime > PassiveState.HUNGER_TIME) {
+            this.lastHungerTime = this.currentTime;
+            this.hungerLevel += 1;
+            this.updateHunger(false);
         }
     };
     PassiveState.prototype.eatingTick = function (time) {
@@ -442,7 +457,7 @@ var PassiveState = (function (_super) {
         if (!this.shouldContinueSubstate("n_happy"))
             return;
         if (time - this.lastMoodChangeTime > 5000) {
-            this.moodLevel -= 1;
+            this.crazyMoodLevel -= 1;
             this.updateMood();
             this.lastMoodChangeTime = time;
         }
@@ -450,8 +465,8 @@ var PassiveState = (function (_super) {
     };
     PassiveState.prototype.madTick = function (time) {
         if (time - this.lastMoodChangeTime > 10000) {
-            this.moodLevel += 1;
-            this.moodLevelPenalty += 1;
+            this.crazyMoodLevel += 1;
+            this.crazyMoodLevelPenalty += 1;
             this.updateMood();
             this.lastMoodChangeTime = time;
         }
@@ -563,13 +578,13 @@ var PassiveState = (function (_super) {
             this.noPlayPenaltyTime = currentTime + 10000;
             return;
         }
-        var playingGameChange = this.currentState == PassiveSubstate.Mad ? 0.95 : 0.6;
-        if (this.shouldEventHappen(playingGameChange)) {
-            this.actionManager.showMessage("I don't want to play right now..", "#4C4D4F", "#ffffff", 2000);
+        var notPlayingGameChance = this.currentState == PassiveSubstate.Mad ? 0.05 : 0.4;
+        if (this.shouldEventHappen(notPlayingGameChance)) {
+            this.actionManager.showMessage("I don't want to play right now.." + notPlayingGameChance.toString(), "#4C4D4F", "#ffffff", 2000);
             this.noPlayPenaltyTime = currentTime + 10000;
             return;
         }
-        this.moodLevel -= 10;
+        this.crazyMoodLevel -= 10;
         this.updateMood();
         this.menuManager.setProperty("hungerLabel", "text", "Game:");
         this.menuManager.setProperty("playButton", "Text", "Surrender");
@@ -603,7 +618,7 @@ var PassiveState = (function (_super) {
         }
         this.menuManager.setProperty("playButton", "Text", "Let's play!");
         this.menuManager.setProperty("hungerLabel", "text", "Hunger:");
-        this.menuManager.setProperty("hungerProgress", "progress", this.moodLevel.toString());
+        this.menuManager.setProperty("hungerProgress", "progress", this.crazyMoodLevel.toString());
     };
     return PassiveState;
 }(bunBUNState));
@@ -713,7 +728,7 @@ var SleepingState = (function (_super) {
     };
     SleepingState.prototype.onPlacesReceived = function (places) { };
     SleepingState.prototype.maybeWakeUp = function () {
-        this.moodLevel += 5;
+        this.crazyMoodLevel += 5;
         this.updateMood();
         if (this.shouldEventHappen(0.3)) {
             this.actionManager.stopSound();
@@ -918,7 +933,7 @@ var CrazyState = (function (_super) {
     CrazyState.prototype.maybeDecreaseCrazy = function (time) {
         if (time - this.lastMoodChangeTime > 10000) {
             this.lastMoodChangeTime = time;
-            this.moodLevel -= 1;
+            this.crazyMoodLevel -= 1;
             this.updateMood();
         }
     };

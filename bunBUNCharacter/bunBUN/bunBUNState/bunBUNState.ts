@@ -28,10 +28,12 @@
     protected noDrawTimer: number;
 
     //the current minimum level of the mood level;
-    protected moodLevelPenalty: number;
+    protected crazyMoodLevelPenalty: number;
+
+    protected lastHungerTime: number;
     //progress values.
     protected hungerLevel: number;
-    protected moodLevel: number;
+    protected crazyMoodLevel: number;
 
     protected foodCount: number;
 
@@ -62,6 +64,7 @@
         this.characterManager = handler.getCharacterManager();
         this.configurationManager = handler.getConfigurationManager();
         this.resourceManagerHelper = new ResourceManagerHelper(this.resourceManager);
+        this.lastHungerTime = this.configurationManager.getCurrentTime().currentTimeMillis;
         this.timerTrigger = new TimerTriggerSystem(() => this.configurationManager.getCurrentTime().currentTimeMillis);
     }
 
@@ -135,10 +138,10 @@
     syncState(): void {
         let moodLevel = this.databaseManager.getObject("moodLevel");
         if (moodLevel != null) {
-            this.moodLevel = Number(moodLevel);
+            this.crazyMoodLevel = Number(moodLevel);
         }
         else {
-            this.moodLevel = 0;
+            this.crazyMoodLevel = 0;
         }
 
         let hungerLevel = this.databaseManager.getObject("hungerLevel");
@@ -169,10 +172,10 @@
 
         let moodLevelPenalty = this.databaseManager.getObject("moodLevelPenalty");
         if (moodLevelPenalty != null) {
-            this.moodLevelPenalty = Number(moodLevelPenalty);
+            this.crazyMoodLevelPenalty = Number(moodLevelPenalty);
         }
         else {
-            this.moodLevelPenalty = 0;
+            this.crazyMoodLevelPenalty = 0;
         }
 
         this.updateFoodCount();
@@ -222,7 +225,7 @@
         if (this.hungerLevel < 20) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#00ff00");
             if (!syncStep)
-                this.moodLevel -= 2;
+                this.crazyMoodLevel -= 2;
         }
         else if (this.hungerLevel < 40) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#3bc293");
@@ -230,7 +233,7 @@
         else if (this.hungerLevel < 60) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#ffde56");
             if (!syncStep)
-                this.moodLevel -= 1;
+                this.crazyMoodLevel -= 1;
         }
         else if (this.hungerLevel < 80) {
             this.menuManager.setProperty("hungerProgress", "frontcolor", "#fbcd75");
@@ -246,12 +249,12 @@
      * This method saves bunBUN mood locally, handle form changes and updates mood progress.
      */
     updateMood(): void {
-        if (this.moodLevel < this.moodLevelPenalty)
-            this.moodLevel = this.moodLevelPenalty;
+        if (this.crazyMoodLevel < this.crazyMoodLevelPenalty)
+            this.crazyMoodLevel = this.crazyMoodLevelPenalty;
 
-        if (this.moodLevel >= 100 && !this.inCrazyForm) {
-            this.moodLevel = 100;
-            this.moodLevelPenalty = 0;
+        if (this.crazyMoodLevel >= 100 && !this.inCrazyForm) {
+            this.crazyMoodLevel = 100;
+            this.crazyMoodLevelPenalty = 0;
             this.inCrazyForm = true;
             this.actionManager.showMessage("Turning to crazy", "#000000", "#ffffff", 5000);
             this.databaseManager.saveObject("inCrazyForm", "true");
@@ -259,9 +262,9 @@
             this.drawAndPlayRandomResourceByCategory("turning_to_crazy");
             this.noDrawTimer = this.currentTime + 10000;
         }
-        else if (this.moodLevel <= 0 && this.inCrazyForm) {
-            this.moodLevel = 0;
-            this.moodLevelPenalty = 0;
+        else if (this.crazyMoodLevel <= 0 && this.inCrazyForm) {
+            this.crazyMoodLevel = 0;
+            this.crazyMoodLevelPenalty = 0;
             this.inCrazyForm = false;
             this.actionManager.showMessage("Turning to normal", "#000000", "#ffffff", 5000);
             this.databaseManager.saveObject("inCrazyForm", "false");
@@ -270,10 +273,10 @@
             this.noDrawTimer = this.currentTime + 10000;
         }
 
-        this.databaseManager.saveObject("moodLevel", this.moodLevel.toString());
-        this.databaseManager.saveObject("moodLevelPenalty", this.moodLevelPenalty.toString());
+        this.databaseManager.saveObject("moodLevel", this.crazyMoodLevel.toString());
+        this.databaseManager.saveObject("moodLevelPenalty", this.crazyMoodLevelPenalty.toString());
 
-        this.menuManager.setProperty("moodProgress", "progress", this.moodLevel.toString());
+        this.menuManager.setProperty("moodProgress", "progress", this.crazyMoodLevel.toString());
     }
 }
 
@@ -303,6 +306,7 @@ class PassiveState extends bunBUNState {
     static get HAVING_FUN_TIME(): number { return 20000; };
     static get BEING_HAPPY_TIME(): number { return 10000; };
     static get ASKING_FOR_INTERACTION_TIME(): number { return 15000; };
+    static get HUNGER_TIME(): number { return 30000; };
 
     //if bunBUN is asking for interaction for more than 10 minutes, he will start to get mad.
     private askingForInteractionStartTime: number;
@@ -340,7 +344,7 @@ class PassiveState extends bunBUNState {
         super.onStart(handler);
         this.lastPlayGameClick = 0;
         this.hungerLevel = 0;
-        this.moodLevel = 0;
+        this.crazyMoodLevel = 0;
         this.currentState = PassiveSubstate.LookingAround;
         this.stateInitialized = false;
 
@@ -455,7 +459,16 @@ class PassiveState extends bunBUNState {
             }
         }
         else {
+            this.maybeGetHunger();
             this.drawAndPlayRandomResourceByCategory("n_normal");
+        }
+    }
+
+    maybeGetHunger(): void {
+        if (this.currentTime - this.lastHungerTime > PassiveState.HUNGER_TIME) {
+            this.lastHungerTime = this.currentTime;
+            this.hungerLevel += 1;
+            this.updateHunger(false);
         }
     }
 
@@ -494,7 +507,7 @@ class PassiveState extends bunBUNState {
     happyTick(time): void {
         if (!this.shouldContinueSubstate("n_happy")) return;
         if (time - this.lastMoodChangeTime > 5000) {
-            this.moodLevel -= 1;
+            this.crazyMoodLevel -= 1;
             this.updateMood();
             this.lastMoodChangeTime = time;
         }
@@ -503,8 +516,8 @@ class PassiveState extends bunBUNState {
 
     madTick(time: number): void {
         if (time - this.lastMoodChangeTime > 10000) {
-            this.moodLevel += 1;
-            this.moodLevelPenalty += 1;
+            this.crazyMoodLevel += 1;
+            this.crazyMoodLevelPenalty += 1;
             this.updateMood();
             this.lastMoodChangeTime = time;
         }
@@ -642,14 +655,14 @@ class PassiveState extends bunBUNState {
             return;
         }
 
-        let playingGameChange = this.currentState == PassiveSubstate.Mad ? 0.95 : 0.6;
-        if (this.shouldEventHappen(playingGameChange)) {
-            this.actionManager.showMessage("I don't want to play right now..", "#4C4D4F", "#ffffff", 2000);
+        let notPlayingGameChance = this.currentState == PassiveSubstate.Mad ? 0.05 : 0.4;
+        if (this.shouldEventHappen(notPlayingGameChance)) {
+            this.actionManager.showMessage("I don't want to play right now.." + notPlayingGameChance.toString(), "#4C4D4F", "#ffffff", 2000);
             this.noPlayPenaltyTime = currentTime + 10000;
             return;
         }
 
-        this.moodLevel -= 10;
+        this.crazyMoodLevel -= 10;
         this.updateMood();
 
         this.menuManager.setProperty("hungerLabel", "text", "Game:");
@@ -692,7 +705,7 @@ class PassiveState extends bunBUNState {
 
         this.menuManager.setProperty("playButton", "Text", "Let's play!");
         this.menuManager.setProperty("hungerLabel", "text", "Hunger:");
-        this.menuManager.setProperty("hungerProgress", "progress", this.moodLevel.toString());
+        this.menuManager.setProperty("hungerProgress", "progress", this.crazyMoodLevel.toString());
     }
 }
 
@@ -831,7 +844,7 @@ class SleepingState extends bunBUNState {
     onPlacesReceived(places: IAlivePlaceLikelihood[]): void { }
 
     maybeWakeUp(): void {
-        this.moodLevel += 5;
+        this.crazyMoodLevel += 5;
         this.updateMood();
 
         if (this.shouldEventHappen(0.3)) {
@@ -1043,7 +1056,7 @@ class CrazyState extends bunBUNState {
         if (time - this.lastMoodChangeTime > 10000)//decrease by 1 every 10 seconds
         {
             this.lastMoodChangeTime = time;
-            this.moodLevel -= 1;
+            this.crazyMoodLevel -= 1;
             this.updateMood();
         }
     }

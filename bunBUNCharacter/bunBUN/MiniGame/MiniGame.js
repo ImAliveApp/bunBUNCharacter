@@ -33,7 +33,7 @@ var ReflexMiniGame = (function (_super) {
         this.difficulty = Math.random() * 100;
         var difficultyTrimmed = this.difficulty.toString().substring(0, 4);
         this.actionManager.draw("laughing.png", this.configurationManager.getMaximalResizeRatio(), false);
-        this.actionManager.showMessage("This is a reflex game! i will walk around the screen, and you will need to touch me ,but ONLY while i DANCE! :D "
+        this.actionManager.showMessage("This is a reflex game! i will walk around the screen, and you will need to touch me ,but ONLY while i Giggle! :D "
             + "\nOnce the progress bar in the menu will reach 100%, you will win! but if it reaches 0%... i will win! :D"
             + "\nThe phone will vibrate everytime you do it incorrectly"
             + "\nDifficulty: " + difficultyTrimmed, "#6599FF", "#ffffff", 10000);
@@ -46,7 +46,7 @@ var ReflexMiniGame = (function (_super) {
         if (currentTime > this.gameStartTime) {
             this.updateProgress(currentTime);
             this.moveToRandomLocation(currentTime);
-            this.maybeDance(currentTime);
+            this.maybeGiggle(currentTime);
             this.drawCurrentState();
         }
         else {
@@ -73,16 +73,16 @@ var ReflexMiniGame = (function (_super) {
         var randomMove = Math.floor(Math.random() * this.difficulty * 30) - Math.floor(Math.random() * this.difficulty * 30);
         this.actionManager.move(randomMove, randomMove, 250);
     };
-    ReflexMiniGame.prototype.maybeDance = function (currentTime) {
+    ReflexMiniGame.prototype.maybeGiggle = function (currentTime) {
         if (currentTime > this.dancingTime) {
             this.currentDrawable = "standing_smiling.png";
         }
-        var danceChance = (100 - this.progress) / 100;
-        if (danceChance < 0.15)
-            danceChance = 0.15;
-        if (Math.random() < danceChance) {
-            this.dancingTime = currentTime + danceChance * 2000;
-            this.currentDrawable = "laughing.png";
+        var giggleChance = (100 - this.progress) / 100;
+        if (giggleChance < 0.15)
+            giggleChance = 0.15;
+        if (Math.random() < giggleChance) {
+            this.dancingTime = currentTime + giggleChance * 2000;
+            this.currentDrawable = "giggle_laugh.png";
         }
     };
     ReflexMiniGame.prototype.drawCurrentState = function () {
