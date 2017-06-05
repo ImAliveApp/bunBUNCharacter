@@ -62,8 +62,8 @@ var AliveClass = (function () {
     };
     AliveClass.prototype.onConfigureMenuItems = function (menuBuilder) {
         var menuHeader = new MenuHeader();
-        menuHeader.TextColor = "#FA9BB7";
-        menuHeader.BackgroundColor = "#BBD3DC";
+        menuHeader.TextColor = "#db859e";
+        menuHeader.BackgroundColor = "#576368";
         var picture = new PictureMenuItem();
         picture.InitialX = 0;
         picture.InitialY = 0;
@@ -72,8 +72,8 @@ var AliveClass = (function () {
         picture.Name = "picture";
         picture.PictureResourceName = "cute_cover.png";
         var moodLabel = new TextBoxMenuItem();
-        moodLabel.BackgroundColor = "#BBD3DC";
-        moodLabel.TextColor = "#FA9BB7";
+        moodLabel.BackgroundColor = "#7e8f96";
+        moodLabel.TextColor = "#db859e";
         moodLabel.InitialX = 0;
         moodLabel.InitialY = 2;
         moodLabel.Width = 1;
@@ -89,11 +89,11 @@ var AliveClass = (function () {
         mood.Name = "moodProgress";
         mood.Progress = 0;
         mood.TextColor = "#ffffff";
-        mood.BackgroundColor = "#BBD3DC";
+        mood.BackgroundColor = "#7e8f96";
         mood.FrontColor = "#b30000";
         var hungerLabel = new TextBoxMenuItem();
-        hungerLabel.BackgroundColor = "#BBD3DC";
-        hungerLabel.TextColor = "#FA9BB7";
+        hungerLabel.BackgroundColor = "#7e8f96";
+        hungerLabel.TextColor = "#db859e";
         hungerLabel.InitialX = 0;
         hungerLabel.InitialY = 3;
         hungerLabel.Width = 1;
@@ -109,7 +109,7 @@ var AliveClass = (function () {
         hunger.Name = "hungerProgress";
         hunger.Progress = 0;
         hunger.TextColor = "#ffffff";
-        hunger.BackgroundColor = "#BBD3DC";
+        hunger.BackgroundColor = "#7e8f96";
         hunger.FrontColor = "#ff0000";
         var feedButton = new ButtonMenuItem();
         feedButton.InitialX = 0;
@@ -117,8 +117,8 @@ var AliveClass = (function () {
         feedButton.Height = 1;
         feedButton.Width = 1;
         feedButton.Text = "Feed";
-        feedButton.TextColor = "#FA9BB7";
-        feedButton.BackgroundColor = "#BBD3DC";
+        feedButton.TextColor = "#db859e";
+        feedButton.BackgroundColor = "#7e8f96";
         feedButton.Name = "feedButton";
         var feedCount = new TextBoxMenuItem();
         feedCount.InitialX = 1;
@@ -127,16 +127,16 @@ var AliveClass = (function () {
         feedCount.Width = 3;
         feedCount.Text = "5 Carrots left";
         feedCount.Name = "foodCount";
-        feedCount.TextColor = "#FA9BB7";
-        feedCount.BackgroundColor = "#BBD3DC";
+        feedCount.TextColor = "#db859e";
+        feedCount.BackgroundColor = "#7e8f96";
         var playButton = new ButtonMenuItem();
         playButton.InitialX = 0;
         playButton.InitialY = 5;
         playButton.Height = 1;
         playButton.Width = menuBuilder.getMaxColumns();
         playButton.Text = "Let's play!";
-        playButton.TextColor = "#FA9BB7";
-        playButton.BackgroundColor = "#BBD3DC";
+        playButton.TextColor = "#db859e";
+        playButton.BackgroundColor = "#7e8f96";
         playButton.Name = "playButton";
         menuBuilder.createMenuHeader(menuHeader);
         menuBuilder.createPicture(picture);
@@ -2816,19 +2816,20 @@ var PassiveState = (function (_super) {
     });
     ;
     PassiveState.prototype.initializeState = function () {
-        this.menuManager.setProperty("picture", "", "");
-        this.menuManager.setProperty("moodLabel", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("moodLabel", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("feedButton", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("feedButton", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("hungerLabel", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("hungerLabel", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("foodCount", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("foodCount", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("playButton", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("playButton", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("moodProgress", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("hungerProgress", "BackgroundColor", "#BBD3DC");
+        this.menuManager.setProperty("picture", "PictureResourceName", "cute_cover.png");
+        this.menuManager.setProperty("menuheader", "BackgroundColor", "#576368");
+        this.menuManager.setProperty("moodLabel", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("moodLabel", "TextColor", "#db859e");
+        this.menuManager.setProperty("feedButton", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("feedButton", "TextColor", "#db859e");
+        this.menuManager.setProperty("hungerLabel", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("hungerLabel", "TextColor", "#db859e");
+        this.menuManager.setProperty("foodCount", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("foodCount", "TextColor", "#db859e");
+        this.menuManager.setProperty("playButton", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("playButton", "TextColor", "#db859e");
+        this.menuManager.setProperty("moodProgress", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("hungerProgress", "BackgroundColor", "#7e8f96");
     };
     PassiveState.prototype.maybeWokeUp = function () {
         var wokeUp = this.databaseManager.getObject("wokeUp");
@@ -3300,7 +3301,8 @@ var CrazyState = (function (_super) {
     ;
     CrazyState.prototype.initializeState = function () {
         this.currentState = CrazySubstate.Normal;
-        this.menuManager.setProperty("picture", "", "");
+        this.menuManager.setProperty("picture", "PictureResourceName", "crazy_cover.png");
+        this.menuManager.setProperty("menuheader", "BackgroundColor", "#6e7771");
         this.menuManager.setProperty("moodLabel", "BackgroundColor", "#919D95");
         this.menuManager.setProperty("moodLabel", "TextColor", "#CFABAA");
         this.menuManager.setProperty("feedButton", "BackgroundColor", "#919D95");

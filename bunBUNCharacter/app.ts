@@ -164,8 +164,8 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
      */
     onConfigureMenuItems(menuBuilder: IMenuBuilder): void {
         let menuHeader = new MenuHeader();
-        menuHeader.TextColor = "#FA9BB7";
-        menuHeader.BackgroundColor = "#BBD3DC";
+        menuHeader.TextColor = "#db859e";
+        menuHeader.BackgroundColor = "#576368";
 
         let picture = new PictureMenuItem();
         picture.InitialX = 0;
@@ -176,8 +176,8 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         picture.PictureResourceName = "cute_cover.png";
 
         let moodLabel = new TextBoxMenuItem();
-        moodLabel.BackgroundColor = "#BBD3DC";
-        moodLabel.TextColor = "#FA9BB7";
+        moodLabel.BackgroundColor = "#7e8f96";
+        moodLabel.TextColor = "#db859e";
         moodLabel.InitialX = 0;
         moodLabel.InitialY = 2;
         moodLabel.Width = 1;
@@ -194,12 +194,12 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         mood.Name = "moodProgress";
         mood.Progress = 0;
         mood.TextColor = "#ffffff";
-        mood.BackgroundColor = "#BBD3DC";
+        mood.BackgroundColor = "#7e8f96";
         mood.FrontColor = "#b30000";
 
         let hungerLabel = new TextBoxMenuItem();
-        hungerLabel.BackgroundColor = "#BBD3DC";
-        hungerLabel.TextColor = "#FA9BB7";
+        hungerLabel.BackgroundColor = "#7e8f96";
+        hungerLabel.TextColor = "#db859e";
         hungerLabel.InitialX = 0;
         hungerLabel.InitialY = 3;
         hungerLabel.Width = 1;
@@ -216,7 +216,7 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         hunger.Name = "hungerProgress";
         hunger.Progress = 0;
         hunger.TextColor = "#ffffff";
-        hunger.BackgroundColor = "#BBD3DC";
+        hunger.BackgroundColor = "#7e8f96";
         hunger.FrontColor = "#ff0000";
 
         let feedButton = new ButtonMenuItem();
@@ -225,8 +225,8 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         feedButton.Height = 1;
         feedButton.Width = 1;
         feedButton.Text = "Feed";
-        feedButton.TextColor = "#FA9BB7";
-        feedButton.BackgroundColor = "#BBD3DC";
+        feedButton.TextColor = "#db859e";
+        feedButton.BackgroundColor = "#7e8f96";
         feedButton.Name = "feedButton";      
 
         let feedCount = new TextBoxMenuItem();
@@ -236,8 +236,8 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         feedCount.Width = 3;
         feedCount.Text = "5 Carrots left";
         feedCount.Name = "foodCount";
-        feedCount.TextColor = "#FA9BB7";
-        feedCount.BackgroundColor = "#BBD3DC";
+        feedCount.TextColor = "#db859e";
+        feedCount.BackgroundColor = "#7e8f96";
 
         let playButton = new ButtonMenuItem();
         playButton.InitialX = 0;
@@ -245,8 +245,8 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         playButton.Height = 1;
         playButton.Width = menuBuilder.getMaxColumns();
         playButton.Text = "Let's play!";
-        playButton.TextColor = "#FA9BB7";
-        playButton.BackgroundColor = "#BBD3DC";
+        playButton.TextColor = "#db859e";
+        playButton.BackgroundColor = "#7e8f96";
         playButton.Name = "playButton"; 
 
         menuBuilder.createMenuHeader(menuHeader);

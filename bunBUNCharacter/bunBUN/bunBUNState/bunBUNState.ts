@@ -330,19 +330,21 @@ class PassiveState extends bunBUNState {
 
     initializeState(): void {
         this.menuManager.setProperty("picture", "PictureResourceName", "cute_cover.png");
-        this.menuManager.setProperty("moodLabel", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("moodLabel", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("feedButton", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("feedButton", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("hungerLabel", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("hungerLabel", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("foodCount", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("foodCount", "TextColor", "#FA9BB7");
-        this.menuManager.setProperty("playButton", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("playButton", "TextColor", "#FA9BB7");
 
-        this.menuManager.setProperty("moodProgress", "BackgroundColor", "#BBD3DC");
-        this.menuManager.setProperty("hungerProgress", "BackgroundColor", "#BBD3DC");
+        this.menuManager.setProperty("menuheader", "BackgroundColor", "#576368");
+        this.menuManager.setProperty("moodLabel", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("moodLabel", "TextColor", "#db859e");
+        this.menuManager.setProperty("feedButton", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("feedButton", "TextColor", "#db859e");
+        this.menuManager.setProperty("hungerLabel", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("hungerLabel", "TextColor", "#db859e");
+        this.menuManager.setProperty("foodCount", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("foodCount", "TextColor", "#db859e");
+        this.menuManager.setProperty("playButton", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("playButton", "TextColor", "#db859e");
+
+        this.menuManager.setProperty("moodProgress", "BackgroundColor", "#7e8f96");
+        this.menuManager.setProperty("hungerProgress", "BackgroundColor", "#7e8f96");
         
     }
 
@@ -897,6 +899,8 @@ class CrazyState extends bunBUNState {
     initializeState(): void {
         this.currentState = CrazySubstate.Normal;
         this.menuManager.setProperty("picture", "PictureResourceName", "crazy_cover.png");
+
+        this.menuManager.setProperty("menuheader", "BackgroundColor", "#6e7771");
         this.menuManager.setProperty("moodLabel", "BackgroundColor", "#919D95");
         this.menuManager.setProperty("moodLabel", "TextColor", "#CFABAA");
         this.menuManager.setProperty("feedButton", "BackgroundColor", "#919D95");
