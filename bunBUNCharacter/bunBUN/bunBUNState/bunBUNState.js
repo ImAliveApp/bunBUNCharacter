@@ -634,6 +634,8 @@ var PassiveState = (function (_super) {
         this.menuManager.setProperty("hungerLabel", "text", "Hunger:");
         this.menuManager.setProperty("hungerProgress", "progress", this.crazyMoodLevel.toString());
     };
+    PassiveState.prototype.onUserEventOccurred = function (eventName, jsonedData) {
+    };
     return PassiveState;
 }(bunBUNState));
 var SleepingSubstate;
@@ -749,6 +751,8 @@ var SleepingState = (function (_super) {
             this.databaseManager.saveObject("wokeUp", "true");
             this.switchContext.switchTo(bunBUNState.PASSIVE);
         }
+    };
+    SleepingState.prototype.onUserEventOccurred = function (eventName, jsonedData) {
     };
     return SleepingState;
 }(bunBUNState));
@@ -998,6 +1002,8 @@ var CrazyState = (function (_super) {
     CrazyState.prototype.onConfigureMenuItems = function (menuBuilder) { };
     CrazyState.prototype.onSpeechRecognitionResults = function (results) { };
     CrazyState.prototype.onPlacesReceived = function (places) { };
+    CrazyState.prototype.onUserEventOccurred = function (eventName, jsonedData) {
+    };
     return CrazyState;
 }(bunBUNState));
 //# sourceMappingURL=bunBUNState.js.map

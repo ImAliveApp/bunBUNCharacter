@@ -227,7 +227,7 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         feedButton.Text = "Feed";
         feedButton.TextColor = "#db859e";
         feedButton.BackgroundColor = "#7e8f96";
-        feedButton.Name = "feedButton";      
+        feedButton.Name = "feedButton";
 
         let feedCount = new TextBoxMenuItem();
         feedCount.InitialX = 1;
@@ -247,7 +247,7 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
         playButton.Text = "Let's play!";
         playButton.TextColor = "#db859e";
         playButton.BackgroundColor = "#7e8f96";
-        playButton.Name = "playButton"; 
+        playButton.Name = "playButton";
 
         menuBuilder.createMenuHeader(menuHeader);
         menuBuilder.createPicture(picture);
@@ -278,5 +278,16 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
             this.currentState = state;
             this.states.getValue(state).initializeState();
         }
+    }
+
+
+    /**
+     * This method will be called once a user event will occur.
+     * You can use AgentConstants.APPLICATION_EVENT_x to check which event occurred.
+     * @param eventName The name of the event, compare this to AgentConstants.APPLICATION_EVENT_x.
+     * @param jsonedData Extra data about the event.
+     */
+    onUserEventOccurred(eventName: string, jsonedData: string): void {
+        this.states.getValue(this.currentState).onUserEventOccurred(eventName, jsonedData);
     }
 }

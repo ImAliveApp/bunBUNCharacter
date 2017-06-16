@@ -32,8 +32,10 @@
   <ItemGroup>
     <TypeScriptCompile Include="AliveEnvironmentObjects\AliveSmsData.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\Calendar\ICalendarEvent.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\ICharacter.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\ICurrentTime.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\IRectangle.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\IUserInformation.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\IVoice.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAliveLatLng.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAliveLatLngBounds.ts" />
@@ -66,6 +68,7 @@
     <TypeScriptCompile Include="AliveInterfaces\ICharacterManager.ts" />
     <TypeScriptCompile Include="AliveInterfaces\IConfigurationManager.ts" />
     <TypeScriptCompile Include="AliveInterfaces\IDatabaseManager.ts" />
+    <TypeScriptCompile Include="AliveInterfaces\IInformationManager.ts" />
     <TypeScriptCompile Include="AliveInterfaces\IManagersHandler.ts" />
     <TypeScriptCompile Include="AliveInterfaces\IResourceManager.ts" />
     <TypeScriptCompile Include="AliveInterfaces\IMenuManager.ts" />

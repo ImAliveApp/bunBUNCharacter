@@ -157,6 +157,9 @@ var AliveClass = (function () {
             this.states.getValue(state).initializeState();
         }
     };
+    AliveClass.prototype.onUserEventOccurred = function (eventName, jsonedData) {
+        this.states.getValue(this.currentState).onUserEventOccurred(eventName, jsonedData);
+    };
     return AliveClass;
 }());
 //# sourceMappingURL=app.js.map

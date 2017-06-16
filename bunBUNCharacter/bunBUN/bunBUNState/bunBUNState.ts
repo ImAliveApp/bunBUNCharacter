@@ -94,6 +94,8 @@
 
     abstract onPlacesReceived(places: IAlivePlaceLikelihood[]): void;
 
+    abstract onUserEventOccurred(eventName: string, jsonedData: string): void;
+
     abstract initializeState(): void;
 
     walkRandomally(): string {
@@ -723,6 +725,10 @@ class PassiveState extends bunBUNState {
         this.menuManager.setProperty("hungerLabel", "text", "Hunger:");
         this.menuManager.setProperty("hungerProgress", "progress", this.crazyMoodLevel.toString());
     }
+
+    onUserEventOccurred(eventName: string, jsonedData: string): void {
+
+    }
 }
 
 enum SleepingSubstate {
@@ -868,6 +874,10 @@ class SleepingState extends bunBUNState {
             this.databaseManager.saveObject("wokeUp", "true");
             this.switchContext.switchTo(bunBUNState.PASSIVE);
         }
+    }
+
+    onUserEventOccurred(eventName: string, jsonedData: string): void {
+
     }
 }
 
@@ -1148,4 +1158,8 @@ class CrazyState extends bunBUNState {
     onSpeechRecognitionResults(results: string): void { }
 
     onPlacesReceived(places: IAlivePlaceLikelihood[]): void { }
+
+    onUserEventOccurred(eventName: string, jsonedData: string): void {
+
+    }
 }
