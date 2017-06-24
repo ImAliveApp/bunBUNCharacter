@@ -519,8 +519,6 @@ var PassiveState = (function (_super) {
             this.timerTrigger.set("n_having_fun", PassiveState.HAVING_FUN_TIME);
         }
     };
-    PassiveState.prototype.onMove = function (oldX, oldY, newX, newY) {
-    };
     PassiveState.prototype.onRelease = function (currentX, currentY) {
         var screenHeight = this.configurationManager.getScreenHeight();
         if (currentY < screenHeight - 50)
@@ -713,8 +711,6 @@ var SleepingState = (function (_super) {
             eventName == AgentConstants.SMS_RECEIVED) {
             this.maybeWakeUp();
         }
-    };
-    SleepingState.prototype.onMove = function (oldX, oldY, newX, newY) {
     };
     SleepingState.prototype.onRelease = function (currentX, currentY) {
         var screenHeight = this.configurationManager.getScreenHeight();
@@ -977,8 +973,6 @@ var CrazyState = (function (_super) {
     };
     CrazyState.prototype.onPhoneEventOccurred = function (eventName) {
         this.drawAndPlayRandomResourceByCategory(eventName);
-    };
-    CrazyState.prototype.onMove = function (oldX, oldY, newX, newY) {
     };
     CrazyState.prototype.onRelease = function (currentX, currentY) {
         var screenHeight = this.configurationManager.getScreenHeight();

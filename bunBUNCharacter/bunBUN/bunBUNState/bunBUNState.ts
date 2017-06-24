@@ -72,8 +72,6 @@
 
     abstract onPhoneEventOccurred(eventName: string): void;
 
-    abstract onMove(oldX: number, oldY: number, newX: number, newY: number): void;
-
     abstract onRelease(currentX: number, currentY: number): void;
 
     abstract onPick(currentX: number, currentY: number): void;
@@ -577,10 +575,6 @@ class PassiveState extends bunBUNState {
         }
     }
 
-    onMove(oldX: number, oldY: number, newX: number, newY: number): void {
-
-    }
-
     onRelease(currentX: number, currentY: number): void {
         let screenHeight = this.configurationManager.getScreenHeight();
 
@@ -813,10 +807,6 @@ class SleepingState extends bunBUNState {
             eventName == AgentConstants.SMS_RECEIVED) {
             this.maybeWakeUp();
         }
-    }
-
-    onMove(oldX: number, oldY: number, newX: number, newY: number): void {
-
     }
 
     onRelease(currentX: number, currentY: number): void {
@@ -1113,10 +1103,6 @@ class CrazyState extends bunBUNState {
 
     onPhoneEventOccurred(eventName: string): void {
         this.drawAndPlayRandomResourceByCategory(eventName);
-    }
-
-    onMove(oldX: number, oldY: number, newX: number, newY: number): void {
-
     }
 
     onRelease(currentX: number, currentY: number): void {

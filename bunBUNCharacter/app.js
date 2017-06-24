@@ -30,9 +30,6 @@ var AliveClass = (function () {
     AliveClass.prototype.onPhoneEventOccurred = function (eventName, jsonedData) {
         this.states.getValue(this.currentState).onPhoneEventOccurred(eventName);
     };
-    AliveClass.prototype.onMove = function (oldX, oldY, newX, newY) {
-        this.states.getValue(this.currentState).onMove(oldX, oldY, newX, newY);
-    };
     AliveClass.prototype.onRelease = function (currentX, currentY) {
         this.states.getValue(this.currentState).onRelease(currentX, currentY);
     };

@@ -73,17 +73,6 @@ class AliveClass implements IAliveAgent, IStateSwitchable {
     }
 
     /**
-     * This method gets called when the user is holding and moving the image of your character (on screen).
-     * @param oldX The X coordinate in the last tick (Top left).
-     * @param oldY The Y coordinate in the last tick (Top left).
-     * @param newX The X coordinate in the current tick (Top left).
-     * @param newY The Y coordinate in the current tick (Top left).
-     */
-    onMove(oldX: number, oldY: number, newX: number, newY: number): void {
-        this.states.getValue(this.currentState).onMove(oldX, oldY, newX, newY);
-    }
-
-    /**
      * This method gets called when the user raised his finger off the character image (on screen).
      * @param currentX The X coordinate of the character image on screen (Top left).
      * @param currentY The Y coordinate of the character image on the screen (Top left).
