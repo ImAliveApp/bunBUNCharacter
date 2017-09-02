@@ -64,6 +64,24 @@ class CheckBoxMenuItem implements ICheckBoxMenuItem {
     public BackgroundColor: string;
 }
 
+class SwitchMenuItem implements ISwitchMenuItem {
+    constructor() {
+        this.ViewType = ViewType.Switch;
+    }
+    protected ViewType: number;//no need to change.
+    public Name: string;
+    public InitialX: number;
+    public InitialY: number;
+    public Width: number;
+    public Height: number;
+    public Checked: boolean;
+    public Text: string;
+    public UncheckedText: string;
+    public FrontColor: string;
+    public TextColor: string;
+    public BackgroundColor: string;
+}
+
 class TextBoxMenuItem implements ITextBoxMenuItem {
     constructor() {
         this.ViewType = ViewType.TextBox;
@@ -77,6 +95,22 @@ class TextBoxMenuItem implements ITextBoxMenuItem {
     public TextColor: string;
     public BackgroundColor: string;
     public Text: string;
+}
+
+class HyperLinkMenuItem implements IHyperLinkMenuItem {
+    constructor() {
+        this.ViewType = ViewType.HyperLink;
+    }
+    protected ViewType: number;//no need to change.
+    public Name: string;
+    public InitialX: number;
+    public InitialY: number;
+    public Width: number;
+    public Height: number;
+    public TextColor: string;
+    public BackgroundColor: string;
+    public Text: string;
+    public Link: string;
 }
 
 class ProgressBarMenuItem implements IProgressBarMenuItem {

@@ -37,6 +37,8 @@
     <TypeScriptCompile Include="AliveEnvironmentObjects\IRectangle.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\IUserInformation.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\IVoice.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\IHyperLinkMenuItem.ts" />
+    <TypeScriptCompile Include="AliveEnvironmentObjects\MenuInterfaces\ISwitchMenuItem.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAliveLatLng.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAliveLatLngBounds.ts" />
     <TypeScriptCompile Include="AliveEnvironmentObjects\Places\IAlivePlace.ts" />

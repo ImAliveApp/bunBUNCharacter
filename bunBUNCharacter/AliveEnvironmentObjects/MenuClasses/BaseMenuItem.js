@@ -28,11 +28,23 @@ var CheckBoxMenuItem = (function () {
     }
     return CheckBoxMenuItem;
 }());
+var SwitchMenuItem = (function () {
+    function SwitchMenuItem() {
+        this.ViewType = ViewType.Switch;
+    }
+    return SwitchMenuItem;
+}());
 var TextBoxMenuItem = (function () {
     function TextBoxMenuItem() {
         this.ViewType = ViewType.TextBox;
     }
     return TextBoxMenuItem;
+}());
+var HyperLinkMenuItem = (function () {
+    function HyperLinkMenuItem() {
+        this.ViewType = ViewType.HyperLink;
+    }
+    return HyperLinkMenuItem;
 }());
 var ProgressBarMenuItem = (function () {
     function ProgressBarMenuItem() {
